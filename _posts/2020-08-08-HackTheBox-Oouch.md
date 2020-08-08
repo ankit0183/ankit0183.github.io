@@ -73,7 +73,8 @@ The Way to Find Neo
 Enumeration
 ============
 
-```Terminal
+
+```bash
 PORT     STATE SERVICE VERSION
 21/tcp   open  ftp     vsftpd 2.0.8 or later
 | ftp-anon: Anonymous FTP login allowed (FTP code 230)
