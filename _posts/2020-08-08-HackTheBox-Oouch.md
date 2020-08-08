@@ -14,43 +14,22 @@ tags: [linux, CMS, Bludit, sudo, npm]
 Machine Information 
 ===================
 
-Column
 
-Details
-
-Name
-
-Oouch
-
-Points
-
-40
-
-Difficulty
-
-Hard
-
-Creator
-
-[QTC](https://www.hackthebox.eu/home/users/profile/103578)
-
-Out On
-
-14 march 2020
-
-creator’s Twitter
-
-[@qtc\_de](https://twitter.com/qtc_de)
-
-Retired on
-
-1 Aug 2020
-
-
+```
+| ID | Details | 
+|-------|--------|
+| Name |  Oouch| 
+| Points | 40 | 
+| Difficulty | Hard |
+| Creator |  [QTC](https://www.hackthebox.eu/home/users/profile/103578)| 
+| Out On | 14 march 2020 | 
+| Retired on | 1 Aug 2020 |
+```
 
 
 The Way to Find Neo
 ===================
+
 
 *   Finding the hidden dir `Oauth`
 *   Getting the token code for the account
@@ -70,8 +49,9 @@ The Way to Find Neo
 
 
 
-Enumeration
-============
+Enumeration & Recon
+====================
+
 
 
 ```bash
@@ -138,5 +118,7 @@ No exact OS matches for host (test conditions non-ideal).
 Network Distance: 2 hops
 Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 ```
+
+
 
 
