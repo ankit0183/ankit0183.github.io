@@ -13,9 +13,7 @@ title: Ankít Kánœjíyà                          # the main title
 tagline: 𝐄𝐭𝐡𝐢𝐜𝐚𝐥 𝐇𝐚𝐜𝐤𝐞𝐫 | 𝐏𝐞𝐧𝐭𝐞𝐬𝐭𝐞𝐫 | 𝐒𝐨𝐟𝐭𝐰𝐚𝐫𝐞 𝐄𝐧𝐠𝐢𝐧𝐞𝐞𝐫 | 𝐂𝐲𝐛𝐞𝐫 𝐒𝐞𝐜𝐮𝐫𝐢𝐭𝐲 𝐑𝐞𝐬𝐚𝐫𝐜𝐡𝐞𝐫.  # it will display as the sub-title
 
 description: >-                        # used by seo meta and the atom feed
-  A minimal, portfolio, sidebar,
-  bootstrap Jekyll theme with responsive web design
-  and focuses on text presentation.
+  
 
 # Replace with the website url, e.g. 'https://username.github.io'
 url: 'protocol://domain'
