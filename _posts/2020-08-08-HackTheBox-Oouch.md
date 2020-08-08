@@ -15,7 +15,7 @@ Machine Information
 ===================
 
 
-```
+
 | ID | Details | 
 |-------|--------|
 | Name |  Oouch| 
@@ -24,7 +24,6 @@ Machine Information
 | Creator |  [QTC](https://www.hackthebox.eu/home/users/profile/103578)| 
 | Out On | 14 march 2020 | 
 | Retired on | 1 Aug 2020 |
-```
 
 
 The Way to Find Neo
@@ -49,8 +48,8 @@ The Way to Find Neo
 
 
 
-Enumeration & Recon
-====================
+Enumeration 
+============
 
 
 
@@ -120,5 +119,46 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 ```
 
 
+Recon
+======
+
+The open ports shown are **21**, **22**, **5000** and **8000**. Nmap tells us that anonymous FTP-access is allowed. Furthermore, we can see from the nmap scan result that http is running on port 5000. Let us quickly check out the project.txt file, that nmap has shown us for FTP.
+
+
+FTP
+====
+
+I did `anonymous` login and it says `qtc's development server` maybe it can be a valid user and found a `project.txt` file there. Downloaded that to my machine.
+
+
+```bash
+root@kali:~# ftp 10.10.10.177 
+Connected to 10.10.10.177.
+220 qtc's development server
+Name (10.10.10.177:root): anonymous
+230 Login successful.
+Remote system type is UNIX.
+Using binary mode to transfer files.
+ftp> ls
+200 PORT command successful. Consider using PASV.
+150 Here comes the directory listing.
+-rw-r--r--    1 ftp      ftp            49 Feb 11 19:34 project.txt
+226 Directory send OK.
+ftp> get project.txt
+local: project.txt remote: project.txt
+200 PORT command successful. Consider using PASV.
+150 Opening BINARY mode data connection for project.txt (49 bytes).
+226 Transfer complete.
+49 bytes received in 0.00 secs (1.1126 MB/s)
+```
+
+`project.txt`
+
+
+```bash
+root@kali:~/CTF/HTB/Boxes/Oouch# cat project.txt 
+Flask -> Consumer
+Django -> Authorization Server
+```
 
 
