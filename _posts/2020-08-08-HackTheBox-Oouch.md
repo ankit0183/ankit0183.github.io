@@ -16,14 +16,14 @@ Machine Information
 
 
 
-| ID                         | Details                                                |
-|----------------------------|-------------------------------------------------------|
-| Name                       |  Oouch                                                 | 
-| Points                     | 40                                                     | 
-| Difficulty                 | Hard                                                   |
-| Creator                    |  [QTC](https://www.hackthebox.eu/home/users/profile/103578)| 
-| Out On                     | 14 march 2020                                             | 
-| Retired on                 |   1 Aug 2020                                  |
+|            ID                         | Details                                                |
+|:---------------------------|:----------------------------------------------------------|
+|          Name                       |        Oouch                                                 | 
+|      Points                     |           40                                                     | 
+|      Difficulty                 |           Hard                                                   |
+|       Creator                    |                [QTC](https://www.hackthebox.eu/home/users/profile/103578)| 
+|       Out On                     |                14 march 2020                                             | 
+|        Retired on                 |             1 Aug 2020                                  |
  
 
 The Way to Find Neo
