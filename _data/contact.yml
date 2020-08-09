@@ -15,9 +15,8 @@
   icon: 'fas fa-envelope'
   noblank: true            # open link in current tab
 -
-  type: rss
-  icon: 'fas fa-rss'
-  noblank: true
+  icon: 'fab fa-instagram'
+  url: 'https://instagram.com/ankit_kanojiya57'
 
 # Uncomment and complete the url below to enable more contact options
 # -
