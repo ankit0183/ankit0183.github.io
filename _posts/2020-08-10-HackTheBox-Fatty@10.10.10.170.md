@@ -1,7 +1,4 @@
 ---
-publised: true
----
----
 title: HackTheBox-Fatty
 author: a3nk17
 date: 2020-08-011 
