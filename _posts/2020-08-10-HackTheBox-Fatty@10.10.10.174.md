@@ -1,5 +1,5 @@
 ---
-title: HackTheBox-Fatty@10.10.10.174
+title: HackTheBox-Fatty
 author: a3nk17
 date: 2020-08-11 
 excerpt: Fatty is an insane linux box by qtc. its forced me way out of my comfort zone, Decompiling the server,search for a SQL-injectionIn & Inorder to escalate our privileges to root, we have to exploit a cronjob. which running on Docker.
@@ -122,5 +122,74 @@ ftp> mget *
 
 After `FTP` login as wee see there are some notes , we download all the notes into local machine `*mget`
 Nothing is intrested in Notes but, From notes we can get information about high ports that are used for `fatty-client.jar`.
+
+
+**First Thing will Do Second
+
+The three services running on `1337`, `1338`, and `1339` are the same.
+`fatty-client.jar` in its current state tries to connect to `8000`. I’ll need to change it myself.
+The application is built for `Java 8`.
+Creds for the application - `qtc` /  `clarabibi`  attemp to login
+
+
+Fire the fatty-client.jar
+-----------------------------
+
+run it with `java -jar fatty-client.jar`, I get a GUI login screen:
+
+```bash
+root@kali:~$ sudo apt-get install jd-gui
+```
+
+
+![](/assets/img/posts/fatty/1.png)
+![](/assets/img/posts/fatty/2.png)
+
+
+When testing the credentials that we found in the notes, we received a connection `error` alert. 
+
+![](/assets/img/posts/fatty/3.png)
+
+
+Decompiling the java client
+----------------------------
+![](/assets/img/posts/fatty/4.png)
+
+I decompile the jar with `jd-gui` and in the `bean.xml` file and we stumble upon something interesting:
+
+```bash
+root@kali:~$ jd-gui fatty-client.jar
+```
+
+```bash
+<bean id="connectionContext" class = htb.fatty.shared.connection.ConnectionContext">
+    <constructor-arg index="0" value = "server.fatty.htb"/>
+    <constructor-arg index="1" value = "8000"/>
+</bean>
+```
+
+We find what appears to be a subdomain that we will add to our `/etc/hosts` file. We also need to find a way to communicate with the server since by default it uses port `8000` and if you remember the ports were changed.
+
+One solution would be to change the port in the `bean.xml` file or create a tunnel, I'll go for the latter.
+
+I quickly install `simpleproxy` to be able to `tunnel` my port `8000` with port `1337` of the server and be able to achieve communication.
+
+```bash
+root0@kali:~$ sudo apt-get install simpleproxy
+```
+
+
+Create the tunnel for Rabbit
+-----------------------------
+
+```bash
+root0@kali:~$ simpleproxy -L 8000 -R fatty.htb:1337
+```
+
+
+When we try to log in, we see that it actually `connects`.
+
+
+![](/assets/img/posts/fatty/5.png)
 
 
