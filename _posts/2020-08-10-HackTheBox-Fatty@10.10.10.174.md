@@ -27,3 +27,69 @@ Machine Information @~Fatty
 | IP    | 10.10.10.174 |
 | Retired on | 08-Aug-2020 |
 | Creator Of The System: | [jkr](https://www.hackthebox.eu/home/users/profile/77141)  |
+
+
+
+Enumaration The Machine
+========================
+
+As we always start diging into rabbit hole by using `Nmap` as we see some useless information.
+
+
+```bash
+root@kali# nmap -p- --min-rate 10000 -oA scans/nmap-alltcp 10.10.10.174
+Starting Nmap 7.80 ( https://nmap.org ) at 2020-03-18 14:57 EDT
+Nmap scan report for 10.10.10.174
+Host is up (0.014s latency).
+Not shown: 65530 closed ports
+PORT     STATE SERVICE
+21/tcp   open  ftp
+22/tcp   open  ssh
+1337/tcp open  waste
+1338/tcp open  wmc-log-svc
+1339/tcp open  kjtsiteserver
+
+Nmap done: 1 IP address (1 host up) scanned in 8.45 seconds
+root@kali# nmap -p 21,22,1337,1338,1339 -sC -sV -oA scans/nmap-tcpscripts 10.10.10.174
+Starting Nmap 7.80 ( https://nmap.org ) at 2020-03-18 15:04 EDT
+Nmap scan report for 10.10.10.174
+Host is up (0.013s latency).
+
+PORT     STATE SERVICE            VERSION
+21/tcp   open  ftp                vsftpd 2.0.8 or later
+| ftp-anon: Anonymous FTP login allowed (FTP code 230)
+| -rw-r--r--    1 ftp      ftp      15426727 Oct 30 12:10 fatty-client.jar
+| -rw-r--r--    1 ftp      ftp           526 Oct 30 12:10 note.txt
+| -rw-r--r--    1 ftp      ftp           426 Oct 30 12:10 note2.txt
+|_-rw-r--r--    1 ftp      ftp           194 Oct 30 12:10 note3.txt
+| ftp-syst: 
+|   STAT: 
+| FTP server status:
+|      Connected to 10.10.14.19
+|      Logged in as ftp
+|      TYPE: ASCII
+|      No session bandwidth limit
+|      Session timeout in seconds is 300
+|      Control connection is plain text
+|      Data connections will be plain text
+|      At session startup, client count was 2
+|      vsFTPd 3.0.3 - secure, fast, stable
+|_End of status
+22/tcp   open  ssh                OpenSSH 7.4p1 Debian 10+deb9u7 (protocol 2.0)
+| ssh-hostkey: 
+|   2048 fd:c5:61:ba:bd:a3:e2:26:58:20:45:69:a7:58:35:08 (RSA)
+|_  256 4a:a8:aa:c6:5f:10:f0:71:8a:59:c5:3e:5f:b9:32:f7 (ED25519)
+1337/tcp open  ssl/waste?
+|_ssl-date: 2020-03-18T19:07:18+00:00; +2m35s from scanner time.
+1338/tcp open  ssl/wmc-log-svc?
+|_ssl-date: 2020-03-18T19:07:18+00:00; +2m35s from scanner time.
+1339/tcp open  ssl/kjtsiteserver?
+|_ssl-date: 2020-03-18T19:07:18+00:00; +2m35s from scanner time.
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Host script results:
+|_clock-skew: mean: 2m34s, deviation: 0s, median: 2m34s
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 202.43 seconds
+```
