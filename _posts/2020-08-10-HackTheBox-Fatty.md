@@ -93,3 +93,34 @@ Host script results:
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
 Nmap done: 1 IP address (1 host up) scanned in 202.43 seconds
 ```
+
+Recon
+------
+
+The standard nmap scan shows that `21` and `22` are the only open ports. Furthermore, nmap tells us that anonymous `FTP-access` is `allowed`. The full port scan shows three additional ports (1337, 1338 and 1339). Let us check out FTP, we can access `FTP` through `Annoymous` user
+
+```bash
+root@kali# ftp 10.10.10.174
+Connected to 10.10.10.174.
+220 qtc's development server
+Name (10.10.10.174:root): anonymous
+230 Login successful.
+Remote system type is UNIX.
+Using binary mode to transfer files.
+ftp> dir
+200 PORT command successful. Consider using PASV.
+150 Here comes the directory listing.
+-rw-r--r--    1 ftp      ftp      15426727 Oct 30 12:10 fatty-client.jar
+-rw-r--r--    1 ftp      ftp           526 Oct 30 12:10 note.txt
+-rw-r--r--    1 ftp      ftp           426 Oct 30 12:10 note2.txt
+-rw-r--r--    1 ftp      ftp           194 Oct 30 12:10 note3.txt
+226 Directory send OK.
+ftp> prompt
+Interactive mode off.
+ftp> mget *
+```
+
+After `FTP` login as wee see there are some notes , we download all the notes into local machine `*mget`
+Nothing is intrested in Notes but, From notes we can get information about high ports that are used for `fatty-client.jar`.
+
+
