@@ -20,7 +20,7 @@ Machine Information @~Fatty
 
 |Conten| Descripcion |
 |-----------|--------------|
-| OS       |  Window |
+| OS       |  Linux |
 | Dificulty    | Insane |
 | Points   | 50 |
 | Release      | 08-Feb-2020 |
