@@ -1,7 +1,7 @@
 ---
 title: HackTheBox-Fatty@10.10.10.174
 author: a3nk17
-date: 2020-08-011 
+date: 2020-08-11 
 excerpt: Fatty is an insane linux box by qtc. its forced me way out of my comfort zone, Decompiling the server,search for a SQL-injectionIn & Inorder to escalate our privileges to root, we have to exploit a cronjob. which running on Docker.
 thumbnail: /assets/img/posts/fatty/info.png
 categories: [HackTheBox, Retired]
