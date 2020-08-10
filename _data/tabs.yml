@@ -7,7 +7,7 @@
 
 -
   name: Home
-  icon: "fas fa-home" ::before
+  icon: "fas fa-home"
 -
   name: Categories
   icon: "fas fa-stream"
