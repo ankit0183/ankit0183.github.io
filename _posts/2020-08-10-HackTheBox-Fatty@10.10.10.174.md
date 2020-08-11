@@ -272,10 +272,9 @@ Let us assume that netcat is installed on the system. With this we can generate 
 
   Now we just have to enter the `base64 payload` into the password field and start our listener om any port
   
+
   Getting User.flag
- ====================
- 
- 
+  ====
  
   ```bash
   root@kali:~# nc -lvnp 443
