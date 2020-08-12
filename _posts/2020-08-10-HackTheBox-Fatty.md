@@ -25,7 +25,6 @@ Machine Information @~Fatty
 | Points   | 50 |
 | Release      | 08-Feb-2020 |
 | IP    | 10.10.10.174 |
-| Retired on | 08-Aug-2020 |
 | Creator Of The System: | [jkr](https://www.hackthebox.eu/home/users/profile/77141)  |
 
 
@@ -254,8 +253,8 @@ public static String changePW(ArrayList<String> args, User user) {
   ============================================
   
   
-  Create the payload
-  --------------------
+ Creating Payload
+ -----------------
   
   Prepare payloads using [yoserial](https://github.com/frohoff/ysoserial)  Tool
   
@@ -273,9 +272,10 @@ Let us assume that netcat is installed on the system. With this we can generate 
   Now we just have to enter the `base64 payload` into the password field and start our listener om any port
   
 
-  Getting User flag
-  ==================
- 
+  
+  Diging To User Flag
+  ===================
+  
   ```bash
   root@kali:~# nc -lvnp 443
 Ncat: Version 7.80 ( https://nmap.org/ncat )
@@ -449,7 +449,7 @@ Now we have a logs.tar archive that contains a logs.tar file that points to `/ro
 ** Ganerating publik kay 
 
 ```bash
-root@darkness:~# ssh-keygen -f id_rsa -N ""
+root@kali:~# ssh-keygen -f id_rsa -N ""
 Generating public/private rsa key pair.
 Your identification has been saved in id_rsa
 Your public key has been saved in id_rsa.pub
@@ -498,14 +498,14 @@ drwxr-xr-x 4 root root 4.0K Jul 27 11:51 client3
 -rw------- 1 root root   33 Oct 30  2019 root.txt
 ```
 
-Ro000000000ted Fatty
-=======================
+Nuts inside the Shell
+======================
 
 Hureeeeeeeeeeyyyyyyyyyyyyyy
 
 ```bash
 root@fatty:~# cat root.txt 
-ee982***************************
+ee982fsdfgsdggsdfgsfgerte****************
 
 ```
 
