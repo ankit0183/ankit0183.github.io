@@ -479,7 +479,7 @@ I modified the existing script to scan for the first 200 ports:
 I used `Wireshark` to look for incoming `SYN packets` and started the scan.
 
 ```bash
-root@darkisland:~/hackthebox/Machines/Ethereal# ./scanport.py
+root@kali:~/hackthebox/Machines/Ethereal# ./scanport.py
 [...]
 "c:\program files (x86)\OpenSSL-v1.1.0\bin\openssl.exe" s_client -host 10.10.14.23 -port 72
 "c:\program files (x86)\OpenSSL-v1.1.0\bin\openssl.exe" s_client -host 10.10.14.23 -port 73
