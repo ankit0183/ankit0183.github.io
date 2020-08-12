@@ -11,10 +11,15 @@ tags: [Deserialization, Java, npm, Window, Docker,]
 
 ![info](/assets/img/posts/fatty/info.png)
 
+Synopsis
+=========
 
+We will `reverse` two `Java applications`, while `modifying` and `recompiling` the client, to exploit `SQL injectio`n during authorization and execute commands on the server due to a vulnerability in deserializing a Java object.
 
-Machine Information @~Fatty
-============================
+The connection to the laboratory is via `VPN`. It is recommended not to connect from a work computer or from a host where there is important data for you, as you find yourself in a `private network` with people who know something about information security.
+
+Machine Information
+====================
 
 
 
