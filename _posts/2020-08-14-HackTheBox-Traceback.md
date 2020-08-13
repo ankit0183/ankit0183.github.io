@@ -1,7 +1,4 @@
 ---
-published: true
----
----
 title: HackTheBox-Traceback
 author: a3nk17
 date: 2020-08-14
