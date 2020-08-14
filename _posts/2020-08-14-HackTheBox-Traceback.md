@@ -219,13 +219,14 @@ Welcome to Xh4H land
 Last login: Thu Aug 14 06:29:02 2020 from 10.10.14.3 
 webadmin@traceback:~$ 
 ```
-Second Meethod
-----------------
+
+2nd Way for getting Rabit whole
+================================
 
 We can get acces to `webadmin` by using `PHP Reverse Shell` method
 
 
- Upload ![PHP Reverse Shell](https://github.com/pentestmonkey/php-reverse-shell)  script through Code Injector module.
+ Upload [PHP Reverse Shell](https://github.com/pentestmonkey/php-reverse-shell)  script through Code Injector module.
  
  ![](/assets/img/posts/traceback/5.png)
  
@@ -351,7 +352,7 @@ in the End nothing is matter
 
 
 # Resources
-[^footnote]:[targetRecon](https://github.com/4m0r/targetRecon)
-[^footnote2]:[Web-Shells Repository](https://github.com/TheBinitGhimire/Web-Shells)
-[^footnote3]:[../lua on GTFOBins](https://gtfobins.github.io/gtfobins/lua/)
-[^footnote4]:[updte-motd on Ubuntu Manual](http://manpages.ubuntu.com/manpages/xenial/man5/update-motd.5.html)
+1-[targetRecon](https://github.com/4m0r/targetRecon)
+2-[Web-Shells Repository](https://github.com/TheBinitGhimire/Web-Shells)
+3-[../lua on GTFOBins](https://gtfobins.github.io/gtfobins/lua/)
+4-[updte-motd on Ubuntu Manual](http://manpages.ubuntu.com/manpages/xenial/man5/update-motd.5.html)
