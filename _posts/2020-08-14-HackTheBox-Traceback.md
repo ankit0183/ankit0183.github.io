@@ -220,7 +220,7 @@ Last login: Thu Aug 14 06:29:02 2020 from 10.10.14.3
 webadmin@traceback:~$ 
 ```
 
-2nd Way for getting Rabit whole
+2nd Way for Diging Rabit whole
 ================================
 
 We can get acces to `webadmin` by using `PHP Reverse Shell` method
