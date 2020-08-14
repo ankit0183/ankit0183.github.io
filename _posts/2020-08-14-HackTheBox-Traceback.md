@@ -352,7 +352,12 @@ in the End nothing is matter
 
 
 # Resources
-1-[targetRecon](https://github.com/4m0r/targetRecon)
-2-[Web-Shells Repository](https://github.com/TheBinitGhimire/Web-Shells)
-3-[../lua on GTFOBins](https://gtfobins.github.io/gtfobins/lua/)
-4-[updte-motd on Ubuntu Manual](http://manpages.ubuntu.com/manpages/xenial/man5/update-motd.5.html)
+
+[targetRecon](https://github.com/4m0r/targetRecon)
+
+[Web-Shells Repository](https://github.com/TheBinitGhimire/Web-Shells)
+
+[../lua on GTFOBins](https://gtfobins.github.io/gtfobins/lua/)
+
+[updte-motd on Ubuntu Manual](http://manpages.ubuntu.com/manpages/xenial/man5/update-motd.5.html)
+
