@@ -1,7 +1,4 @@
 ---
-published: true
----
----
 title: HackTheBox-Smasher
 author: a3nk17
 date: 2019-01-11 
