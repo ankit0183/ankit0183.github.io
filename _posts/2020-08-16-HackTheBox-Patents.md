@@ -1,7 +1,4 @@
 ---
-published: true
----
----
 title: HackTheBox-Patents
 author: a3nk17
 date: 2020-06-08 
