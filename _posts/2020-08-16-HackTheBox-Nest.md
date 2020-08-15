@@ -5,7 +5,7 @@ date: 2020-06-11
 excerpt: Nest is an easy windows box by VbScrub.The box starts with guest SMB enumeration, where we find credentials for a user.In order to get root, we first have to get the debug password for the service running on port 4386
 thumbnail: /assets/img/posts/nest/info.png
 categories: [HackTheBox, Retired]
-tags: [[HTB, CTF, Hack The Box, Security, SMB, VB, VisualBasic, Crypto, AES,]
+tags: [HTB, CTF, Hack The Box, Security, SMB, VB, VisualBasic, Crypto, AES,]
 ---
 
 ![info](/assets/img/posts/nest/info.png)
