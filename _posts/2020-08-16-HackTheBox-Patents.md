@@ -2,8 +2,7 @@
 title: HackTheBox-Patents
 author: a3nk17
 date: 2020-06-08 
-excerpt: Patents is a hard linux box by [gbyolo](https://www.hackthebox.eu/home/users/profile/36994).
-The box starts with web-enumeration, which reveals a that webpage allows docx file upload and parses the document on server-side. This allows out-of-band XXE to leak arbitrary files. After leaking a config file from the server, 
+excerpt: Patents is a hard linux box,The box starts with web-enumeration, which reveals a that webpage allows docx file upload and parses the document on server-side. This allows out-of-band XXE to leak arbitrary files. After leaking a config file from the server, 
 thumbnail: /assets/img/posts/patents/info.png
 categories: [HackTheBox, Retired]
 tags: [linux, CMS, Bludit, sudo, npm]
