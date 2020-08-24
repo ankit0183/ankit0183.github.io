@@ -1,5 +1,5 @@
 ---
-title: HackTheBox-magic
+title: HackTheBox-Magic
 author: a3nk17
 date: 2020-08-24 
 excerpt: Magic was a medium linux machine that involved sql injection to get access to an image upload feature. We upload our malicious image to get a shell on the target system. Enumerating for credentials exposes mysql creds that we use to dump the password for the user. Root was explpoitation of fdisk and sysinfo to get a root reverse shell.
