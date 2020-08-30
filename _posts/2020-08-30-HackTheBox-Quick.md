@@ -1,4 +1,3 @@
-
 ---
 title: HackTheBox-Quick
 author: a3nk17
