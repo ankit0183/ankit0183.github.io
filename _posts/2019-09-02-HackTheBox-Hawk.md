@@ -1,7 +1,4 @@
 ---
-published: true
----
----
 title: HackTheBox-Hawk
 author: a3nk17
 date: 2019-08-30 
