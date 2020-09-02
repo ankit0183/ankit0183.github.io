@@ -273,7 +273,7 @@ $databases = array (
 
 Password: `drupal4hawk`
 
-We can log in as user daniel with this password:
+We can log in as user `daniel` with this password:
 
 ```bash
 root@violentunicorn:~# ssh daniel@10.10.10.102
@@ -286,7 +286,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> 
 ```
 
-We can escape this python interactive shell with:
+We can escape this `python interactive shell` with:
 
 ```bash
 >>> import pty
@@ -317,7 +317,7 @@ permitted by applicable law.
 Last login: Sat Jul 14 18:49:44 2018 from 10.10.10.102
 ```
 
-We can then access the login page.
+We can then `access` the login page.
 
 ![H2 login](/assets/img/posts/hawk/h2login.png)
 
