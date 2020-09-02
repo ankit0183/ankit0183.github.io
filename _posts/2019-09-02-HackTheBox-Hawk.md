@@ -9,12 +9,6 @@ tags: [HTB, sql, Drupal, web, SQLi,]
 ---
 
 
-![info](/assets/img/posts/hawk/info.png)
-
-
-
-## Linux / 10.10.10.102
-
 
 
 This blog post is a quick writeup of Hawk from Hack the Box.
