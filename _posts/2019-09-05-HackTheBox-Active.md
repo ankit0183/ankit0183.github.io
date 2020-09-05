@@ -1,8 +1,4 @@
 ---
-published: true
----
-
----
 title: HackTheBox-Active
 author: a3nk17
 date: 2019-09-05 
