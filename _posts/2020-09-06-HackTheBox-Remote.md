@@ -8,4 +8,4 @@ categories: [HackTheBox, Retired]
 tags: [nfs, umbraco, metasploits, efs]
 ---
 
-![info](/assets/img/posts/remote/info.png))
+![info](/assets/img/posts/remote/info.png)
