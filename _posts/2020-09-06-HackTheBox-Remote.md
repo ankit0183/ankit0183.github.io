@@ -1,7 +1,4 @@
 ---
-published: true
----
----
 title: HackTheBox-Remote
 author: a3nk17
 date: 2020-09-06
