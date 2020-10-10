@@ -22,18 +22,6 @@ tags: [a3nk17, openemr, client, vhost, cve]
 
 
 
-##### @Cache~root
-
-
-
-![](https://asciinema.org/a/jSyVXhwfEiCHFD0Uu3exIlFpz)
-
-<script src="https://https://asciinema.org/a/364557.js" id="asciicast-364557" async></script>
-
-
-<p>This is some text.</p>
-<script src="https://asciinema.org/a/14.js" id="asciicast-14" async></script>
-<p>This is some other text.</p>
 
 ## Enumeration
 
