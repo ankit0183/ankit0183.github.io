@@ -1,7 +1,4 @@
 ---
-published: true
----
----
 title: HackTheBox-BlackField
 author: a3nk17
 date: 2020-9-25 
