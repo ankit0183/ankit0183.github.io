@@ -1,5 +1,5 @@
 ---
-title: HackTheBox-Fatty
+title: HackTheBox-Blunder
 author: a3nk17
 date: 2020-10-18 
 excerpt: The initial foothold on the box requires a bit of enumeration to find out the correct user who can login into CMS:- bludit. There is the file upload vulnerability on the cms that gets the initial sheel on the box..
