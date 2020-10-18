@@ -103,7 +103,7 @@ robots.txt              [Status: 200, Size: 22, Words: 3, Lines: 2]
 robots.txt              [Status: 200, Size: 22, Words: 3, Lines: 2]
 todo.txt                [Status: 200, Size: 118, Words: 20, Lines: 5]
 
-snowscan@kali:~/htb/blunder$ curl http://blunder.htb/todo.txt
+a3nk17@kali:~/htb/blunder$ curl http://blunder.htb/todo.txt
 -Update the CMS
 -Turn off FTP - DONE
 -Remove old users - DONE
