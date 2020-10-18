@@ -146,7 +146,7 @@ and with `wfuzz` i got 2more directories
 
 ```bash
 a3nk17@kali:~/htb/blunder$ chmod +x b.py 
-snowscan@kali:~/htb/blunder$ ./b.py cewl.txt
+a3nk17@kali:~/htb/blunder$ ./b.py cewl.txt
 [*] Trying: CeWL 5.4.8 (Inclusion) Robin Wood (robin@digi.ninja) (https://digi.ninja/)
 [*] Trying: the
 [...]
