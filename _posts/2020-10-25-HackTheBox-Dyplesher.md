@@ -1,7 +1,4 @@
 ---
-published: true
----
----
 title: HackTheBox-Dyplesher
 author: a3nk17
 date: 2020-10-25 
